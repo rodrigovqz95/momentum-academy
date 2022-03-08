@@ -11,9 +11,10 @@ import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 
-const LoginScreen = () => {
+const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigation = useNavigation();
 
@@ -28,16 +29,25 @@ const LoginScreen = () => {
   }, []);
 
   const handleSignUp = async () => {
-    navigation.replace("SignUp");
+    if (password !== confirmPassword) {
+      alert(`Password must be the same`);
+      return;
+    }
+
+    try {
+      const userCredentials = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      const user = userCredentials.user;
+      console.log(user.email);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const loginHandler = async () => {
-    const userCredentials = await auth.signInWithEmailAndPassword(
-      email,
-      password
-    );
-    const user = userCredentials.user;
-    console.log("Logged as:", user.email);
+    navigation.replace("Login");
   };
 
   return (
@@ -60,18 +70,26 @@ const LoginScreen = () => {
           style={styles.input}
           secureTextEntry
         />
+
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          style={styles.input}
+          secureTextEntry
+        />
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={loginHandler} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
+        <TouchableOpacity onPress={handleSignUp} style={styles.button}>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={handleSignUp}
+          onPress={loginHandler}
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
-            {`Don't have an account?\nRegister here!`}
+            {`Already have an account?\nLogin here!`}
           </Text>
         </TouchableOpacity>
       </View>
@@ -79,7 +97,7 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -123,7 +141,7 @@ const styles = StyleSheet.create({
   buttonOutlineText: {
     color: "#0782F9",
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 16,
     textAlign: "center",
   },
 });
