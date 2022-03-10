@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Image
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
@@ -45,6 +46,9 @@ const LoginScreen = () => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <View style={styles.logoImage}>
+          <Image source={require("../assets/logo-momentum-academy.png")} style={styles.image} resizeMode="contain"></Image>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -125,5 +129,15 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     textAlign: "center",
+  },
+  image: {
+    flex: 1,
+    height: undefined,
+    width: undefined
+  },
+  logoImage: {
+    width: 250,
+    height: 250,
+    overflow: "hidden",
   },
 });

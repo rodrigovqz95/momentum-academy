@@ -4,6 +4,7 @@ import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Profile from '../screens/Account'
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -26,7 +27,6 @@ const HomeScreen = () => {
     </View>
   );
 };
-
 
 const Tab = createBottomTabNavigator();
 
@@ -89,7 +89,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Cuenta"
-          component={HomeScreen}
+          component={Profile}
           options={{
             tabBarLabel: 'Cuenta',
             tabBarIcon: ({ color, size }) => (
