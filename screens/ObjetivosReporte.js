@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/core';
 import {
   getObjetivosByObjetivoId,
   updateObjetivoById,
-} from '../api/firebase_api';
+} from '../api/ObjetivosApi';
 
 const ObjetivosReporte = ({ route }) => {
   const [datosObjetivo, setDatosObjetivo] = useState({});
@@ -24,14 +24,14 @@ const ObjetivosReporte = ({ route }) => {
 
   useEffect(() => {
     const getObjetivo = async () => {
-      const objetivo = await getObjetivosByObjetivoId(usuario.uid, objetivoId);
+      const objetivo = await getObjetivosByObjetivoId(objetivoId);
       setDatosObjetivo(objetivo);
     };
     getObjetivo();
   }, [objetivoId]);
 
   const guardarHandler = () => {
-    updateObjetivoById(usuario.uid, objetivoId, datosObjetivo);
+    updateObjetivoById(objetivoId, datosObjetivo);
     navigation.navigate('Noticias');
   };
 

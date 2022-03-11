@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { auth, database } from '../firebase';
-import { getObjetivosByUserId } from '../api/firebase_api';
+import { getObjetivosByUserId } from '../api/ObjetivosApi';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/core';
 
@@ -28,7 +28,7 @@ const ListaObjetivos = () => {
     });
   };
 
-  const objetivosItems = objetivos.map((objetivo) => {
+  const objetivosItems = objetivos.map((objetivo, index) => {
     const formatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const startOfWeek = new Date(objetivo.startOfWeek).toLocaleDateString(
       'es-US',
@@ -40,7 +40,7 @@ const ListaObjetivos = () => {
     );
 
     return (
-      <View style={styles.itemContainer} key={objetivo.id}>
+      <View style={styles.itemContainer} key={index}>
         <View style={styles.detailsContainer}>
           <Text style={styles.itemTitle}>Objetivo:</Text>
           <Text>

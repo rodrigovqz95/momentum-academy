@@ -9,10 +9,11 @@ import {
   StatusBar,
 } from 'react-native';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import { auth, database } from '../firebase';
+import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
+import { createNewObjetivo } from '../api/ObjetivosApi.js';
 
 const NuevoObjetivo = () => {
   const [datosObjetivo, setDatosObjetivo] = useState({});
@@ -33,11 +34,10 @@ const NuevoObjetivo = () => {
       createdAt: currentDate.getTime(),
       startOfWeek: startOfWeek.getTime(),
       endOfWeek: endOfWeek.getTime(),
+      userId: userId,
     };
 
-    database
-      .ref(`objetivos/${userId}`)
-      .push(JSON.parse(JSON.stringify(nuevoObjetivo)));
+    createNewObjetivo(nuevoObjetivo);
 
     navigation.navigate('Noticias');
   };
