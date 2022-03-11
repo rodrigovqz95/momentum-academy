@@ -1,16 +1,17 @@
 // Import the functions you need from the SDKs you need
-import * as firebase from "firebase";
+import * as firebase from 'firebase';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAG-qO8JxCBJilRuxDtDAJdDdezkVAeOiE",
-  authDomain: "momentum-academy.firebaseapp.com",
-  projectId: "momentum-academy",
-  storageBucket: "momentum-academy.appspot.com",
-  messagingSenderId: "933630017400",
-  appId: "1:933630017400:web:6d0090082e6c23e8ed128d",
+  apiKey: 'AIzaSyAG-qO8JxCBJilRuxDtDAJdDdezkVAeOiE',
+  authDomain: 'momentum-academy.firebaseapp.com',
+  projectId: 'momentum-academy',
+  databaseURL: 'https://momentum-academy-default-rtdb.firebaseio.com/',
+  storageBucket: 'momentum-academy.appspot.com',
+  messagingSenderId: '933630017400',
+  appId: '1:933630017400:web:6d0090082e6c23e8ed128d',
 };
 
 // Initialize Firebase
@@ -22,5 +23,6 @@ if (firebase.apps.length === 0) {
 }
 
 const auth = firebase.auth();
+const database = firebase.database();
 
-export { auth };
+export { auth, database };

@@ -1,11 +1,12 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import LoginScreen from "./screens/LoginScreen";
-import HomeScreen from "./screens/HomeScreen";
-import SignUpScreen from "./screens/SignUpScreen";
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
+import SignUpScreen from './screens/SignUpScreen';
+import ObjetivosReporte from './screens/ObjetivosReporte';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,11 +19,20 @@ export default function App() {
           name="Login"
           component={LoginScreen}
         />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Home"
+          component={HomeScreen}
+        />
         <Stack.Screen
           options={{ headerShown: false }}
           name="SignUp"
           component={SignUpScreen}
+        />
+        <Stack.Screen
+          name="EditObjetivo"
+          component={ObjetivosReporte}
+          options={{ title: 'Reportar Resultados' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -32,8 +42,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#FFF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
