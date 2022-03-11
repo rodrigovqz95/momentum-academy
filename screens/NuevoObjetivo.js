@@ -35,8 +35,6 @@ const NuevoObjetivo = () => {
       endOfWeek: endOfWeek.getTime(),
     };
 
-    console.log(nuevoObjetivo);
-
     database
       .ref(`objetivos/${userId}`)
       .push(JSON.parse(JSON.stringify(nuevoObjetivo)));

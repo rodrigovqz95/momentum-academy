@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { auth, database } from '../firebase';
 import { getObjetivosByUserId } from '../api/firebase_api';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -8,17 +9,18 @@ import { useNavigation } from '@react-navigation/core';
 const ListaObjetivos = () => {
   const [objetivos, setObjetivos] = useState([]);
   const user = auth.currentUser;
-
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getObjetivos = async () => {
-      const objetivosUsuario = await getObjetivosByUserId(user.uid);
-      setObjetivos(objetivosUsuario);
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const getObjetivos = async () => {
+        const objetivosUsuario = await getObjetivosByUserId(user.uid);
+        setObjetivos(objetivosUsuario);
+      };
 
-    getObjetivos();
-  }, []);
+      getObjetivos();
+    }, [user.uid])
+  );
 
   const editHandler = (objetivo) => {
     navigation.navigate('EditObjetivo', {

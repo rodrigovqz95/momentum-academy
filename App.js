@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import AccountScreen from './screens/AccountScreen';
 import AdminScreen from './screens/AdminScreen';
+import ObjetivosReporte from './screens/ObjetivosReporte';
 
 const Stack = createNativeStackNavigator();
 
