@@ -13,8 +13,6 @@ import React, { useState, useEffect } from 'react';
 
 import { auth, database } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
-import { useFocusEffect } from '@react-navigation/native';
-import { getObjetivosByUserId } from '../api/firebase_api';
 
 const NuevoObjetivo = () => {
   const [datosObjetivo, setDatosObjetivo] = useState({});
