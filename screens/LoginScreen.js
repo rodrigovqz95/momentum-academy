@@ -20,7 +20,11 @@ const LoginScreen = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
+      console.log("I am loggin as:", user.email)
+      if (user.email === 'test@tester.com'){
+        navigation.replace("Admin")
+      }
+      else if (user) {
         navigation.replace("Home");
       }
     });
@@ -51,14 +55,14 @@ const LoginScreen = () => {
       </View>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Email"
+          placeholder="Correo"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
 
         <TextInput
-          placeholder="Password"
+          placeholder="Contraseña"
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
@@ -68,14 +72,14 @@ const LoginScreen = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={loginHandler} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Iniciar Sesión</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleSignUp}
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
-            {`Don't have an account?\nRegister here!`}
+            {`¿No tienes cuenta?\n¡Registrate aquí!`}
           </Text>
         </TouchableOpacity>
       </View>
