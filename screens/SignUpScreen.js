@@ -65,7 +65,7 @@ const SignUpScreen = () => {
       </View>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Email"
+          placeholder="Correo"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
@@ -73,7 +73,7 @@ const SignUpScreen = () => {
         />
 
         <TextInput
-          placeholder="Password"
+          placeholder="Contraseña"
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
@@ -81,7 +81,7 @@ const SignUpScreen = () => {
         />
 
         <TextInput
-          placeholder="Confirm Password"
+          placeholder="Confirmar Contraseña"
           value={confirmPassword}
           onChangeText={(text) => setConfirmPassword(text)}
           style={styles.input}
@@ -91,14 +91,14 @@ const SignUpScreen = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleSignUp} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={loginHandler}
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>
-            {`Already have an account?\nLogin here!`}
+            {`¿Ya Tienes Una Cuenta?\n¡Inicia Sesión Aquí!`}
           </Text>
         </TouchableOpacity>
       </View>

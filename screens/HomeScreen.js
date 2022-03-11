@@ -4,10 +4,7 @@ import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
-import Profile from '../screens/Account';
-import NuevoObjetivo from './NuevoObjetivo';
-import ListaObjetivos from './ListaObjetivos';
+import Profile from './AccountScreen';
 
 const HomeScreen = () => {
   const navigation = useNavigation();

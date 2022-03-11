@@ -4,7 +4,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 
-export default function App() {
+export default function AccountScreen() {
 
     const navigation = useNavigation();
 
