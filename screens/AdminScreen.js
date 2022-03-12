@@ -6,6 +6,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Profile from './AccountScreen'
 import NewsList from "./NewsList";
+import ListaObjetivos from "./ListaObjetivos";
+import NuevoObjetivo from "./NuevoObjetivo";
+import AddNews from "./AddNews";
+import {styles} from "../components/Styles";
 
 const AdminScreen = () => {
   const navigation = useNavigation();
@@ -50,7 +54,7 @@ export default function App() {
       >
         <Tab.Screen
           name="Noticias"
-          component={Profile}
+          component={ListaObjetivos}
           options={{
             tabBarLabel: 'Noticias',
             tabBarIcon: ({ color, size }) => (
@@ -60,7 +64,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Metas"
-          component={NewsList}
+          component={NuevoObjetivo}
           options={{
             tabBarLabel: 'Metas',
             tabBarIcon: ({ color, size }) => (
@@ -70,7 +74,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Reportes"
-          component={Profile}
+          component={NewsList}
           options={{
             tabBarLabel: 'Reportes',
             tabBarIcon: ({ color, size }) => (
@@ -79,10 +83,10 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name="Historial"
-          component={Profile}
+          name="Agregar Noticia"
+          component={AddNews}
           options={{
-            tabBarLabel: 'Historial',
+            tabBarLabel: 'Agregar Noticia',
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="linechart" color={color} size={size} />
             ),
@@ -101,25 +105,3 @@ export default function App() {
       </Tab.Navigator>
   );
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    backgroundColor: "#0782F9",
-    width: "60%",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 40,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-});
