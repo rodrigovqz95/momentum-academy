@@ -12,7 +12,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import {addNews, getNews} from '../api/NewsApi';
+import {addNews, deleteNews, getNews} from '../api/NewsApi';
 import {styles} from '../components/Styles';
 
 
@@ -30,6 +30,11 @@ class AddNews extends Component {
         console.log("news");
     }
 
+    onNewsDeleted = (news) => {
+        console.log("News Deleted");
+        console.log("news");
+    }
+    
     onNewsReceived = (newsList) => {
         console.log(newsList);
         this.setState(prevState => ({
@@ -79,6 +84,17 @@ class AddNews extends Component {
                     }
                     } 
                 />
+                </View>
+                <View  style={styles.recentItem}>
+                <Button
+                    title= 'Borrar Noticia'
+                    style={styles.button}
+                    onPress={() =>
+                      deleteNews(
+                    this.onNewsAdded
+                    )
+                    } 
+                />               
                 </View>
             </SafeAreaView>
         );

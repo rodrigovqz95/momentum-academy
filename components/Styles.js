@@ -19,11 +19,12 @@ const styles = StyleSheet.create({
       alignItems: "center",
     },
     inputContainer: {
-      width: "80%",
+      width: "100%",
     },
     listContainer: {
       flexDirection: "row",
-      alignItems: "flex-start",
+      alignItems: "center",
+      flex: 1,
     },
     input: {
       backgroundColor: "white",
@@ -65,7 +66,9 @@ const styles = StyleSheet.create({
         marginBottom: "auto",
         fontSize: 14,
         fontWeight: '600',
-        fontStyle: 'italic'
+        fontStyle: 'italic',
+        width: 30,
+        height: 14
     },
     shadowProp: {
         shadowColor: 'black',

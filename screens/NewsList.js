@@ -12,7 +12,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import {addNews, getNews} from '../api/NewsApi';
+import {addNews, getNews, deleteNews} from '../api/NewsApi';
 import {styles} from '../components/Styles';
 
 
@@ -25,8 +25,8 @@ class NewsList extends Component {
         color: "blue",
     }
 
-    onNewsAdded = (news) => {
-        console.log("News Added");
+    onNewsDeleted = (news) => {
+        console.log("News Deleted");
         console.log("news");
     }
 
@@ -54,20 +54,23 @@ class NewsList extends Component {
                         <ListItem
                          containerStyle={[styles.listContainer, styles.shadowProp]}
                         >
-                        <ListItem.Content>
                           <ListItem.Title
-                          style={styles.dateList}
+                          style={styles.inputLabel}
                           >
                           {item.dateDisplay}
                           </ListItem.Title>
-                        </ListItem.Content>
-                        <ListItem.Content>
                           <ListItem.Title
                           style={styles.inputLabel}
                           >
                           {item.text}
                           </ListItem.Title>
-                        </ListItem.Content>
+                          <Button
+                            containerStyle={styles.button}
+                            title="Borrar"
+                            onPress={() =>
+                                deleteNews(item.id, this.onNewsDeleted)}
+                          />
+                          
                         </ListItem>
                       );
                     }
