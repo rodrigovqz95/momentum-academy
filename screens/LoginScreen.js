@@ -55,6 +55,11 @@ const LoginScreen = () => {
         ></Image>
       </View>
       <View style={styles.inputContainer}>
+      <Text style={styles.mainText}>
+            {'¡Bienvenido A La App De Seguimiento De Momentum Academy!'}
+          </Text>
+      </View>
+      <View style={styles.inputContainer}>
         <TextInput
           placeholder="Correo"
           value={email}
@@ -135,6 +140,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
     textAlign: 'center',
+  },
+  mainText: {
+    color: '#0782F9',
+    fontWeight: '300',
+    fontSize: 14,
+    textAlign: 'justify',
+    paddingBottom: 10
   },
   image: {
     flex: 1,

@@ -9,6 +9,7 @@ import Profile from './AccountScreen';
 import ListaObjetivos from './ListaObjetivos';
 import NuevoObjetivo from './NuevoObjetivo';
 import HistorialScreen from './HistorialScreen';
+import NewsList from './NewsList';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -53,7 +54,7 @@ export default function HomeTabNavigator() {
     >
       <Tab.Screen
         name="Noticias"
-        component={HomeScreen}
+        component={NewsList}
         options={{
           tabBarLabel: 'Noticias',
           tabBarIcon: ({ color, size }) => (

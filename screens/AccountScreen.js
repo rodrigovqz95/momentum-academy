@@ -1,10 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity} from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { StyleSheet,
+        Text,
+        View,
+        SafeAreaView,
+        Image,
+        TextInput,
+        ScrollView,
+        Button,
+        TouchableOpacity} from "react-native";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
+import {addNews, getNews} from '../api/NewsApi';
 
-export default function AccountScreen() {
+export default function AccountScreen(){
 
     const navigation = useNavigation();
 
@@ -67,11 +75,6 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         overflow: "hidden",
         margin: 10
-    },
-    infoContainer: {
-        alignSelf: "center",
-        alignItems: "center",
-        marginTop: 16
     },
     statsContainer: {
         flexDirection: "row",
