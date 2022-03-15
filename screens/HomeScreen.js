@@ -8,6 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Profile from './AccountScreen';
 import ListaObjetivos from './ListaObjetivos';
 import NuevoObjetivo from './NuevoObjetivo';
+import HistorialScreen from './HistorialScreen';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -83,7 +84,7 @@ export default function HomeTabNavigator() {
       />
       <Tab.Screen
         name="Historial"
-        component={HomeScreen}
+        component={HistorialScreen}
         options={{
           tabBarLabel: 'Historial',
           tabBarIcon: ({ color, size }) => (

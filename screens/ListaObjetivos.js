@@ -1,21 +1,33 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { auth, database } from '../firebase';
+import { auth, firebase } from '../firebase';
 import { getObjetivosByUserId } from '../api/ObjetivosApi';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/core';
+import { Divider } from 'react-native-elements';
+import { getDateFromFirestoreTimestamp } from '../utils/dates_utils.js';
 
 const ListaObjetivos = () => {
   const [objetivos, setObjetivos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const user = auth.currentUser;
   const navigation = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
       const getObjetivos = async () => {
+        setIsLoading(true);
         const objetivosUsuario = await getObjetivosByUserId(user.uid);
         setObjetivos(objetivosUsuario);
+        setIsLoading(false);
       };
 
       getObjetivos();
@@ -28,38 +40,52 @@ const ListaObjetivos = () => {
     });
   };
 
-  const objetivosItems = objetivos.map((objetivo, index) => {
+  const objetivosItems = objetivos.map((objetivo) => {
     const formatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    const startOfWeek = new Date(objetivo.startOfWeek).toLocaleDateString(
-      'es-US',
-      formatOptions
-    );
-    const endOfWeek = new Date(objetivo.endOfWeek).toLocaleDateString(
-      'es-US',
-      formatOptions
-    );
+
+    const startOfWeek = getDateFromFirestoreTimestamp(
+      objetivo.startOfWeek
+    ).toLocaleDateString('es-US', formatOptions);
+
+    const endOfWeek = getDateFromFirestoreTimestamp(
+      objetivo.endOfWeek
+    ).toLocaleDateString('es-US', formatOptions);
 
     return (
-      <View style={styles.itemContainer} key={index}>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.itemTitle}>Objetivo:</Text>
-          <Text>
-            {startOfWeek} - {endOfWeek}
-          </Text>
+      <View key={objetivo.id}>
+        <View style={styles.itemContainer}>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.itemTitle}>Objetivo:</Text>
+            <Text>
+              {startOfWeek} - {endOfWeek}
+            </Text>
+          </View>
+          <View style={styles.iconContainer}>
+            <AntDesign
+              name="edit"
+              color="#0782F9"
+              size={20}
+              onPress={() => editHandler(objetivo)}
+            />
+          </View>
         </View>
-        <View style={styles.iconContainer}>
-          <AntDesign
-            name="edit"
-            color="#0782F9"
-            size={20}
-            onPress={() => editHandler(objetivo)}
-          />
-        </View>
+        <Divider style={{ setStatusBarBackgroundColor: 'black' }} />
       </View>
     );
   });
 
-  return <ScrollView style={styles.container}>{objetivosItems}</ScrollView>;
+  return (
+    <>
+      {!isLoading && (
+        <ScrollView style={styles.container}>{objetivosItems}</ScrollView>
+      )}
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+    </>
+  );
 };
 
 export default ListaObjetivos;
@@ -73,8 +99,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1,
     padding: 10,
   },
   detailsContainer: {
@@ -88,5 +112,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });
