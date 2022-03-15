@@ -40,6 +40,7 @@ export default function App() {
       <Tab.Navigator
         tabBarOptions={
           {showLabel: false,
+           showIcon: true,
           style: {
             position: 'absolute',
             bottom: 25,

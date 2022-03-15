@@ -20,11 +20,13 @@ const LoginScreen = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log('I am loggin as:', user.email);
-      if (user.email === 'test@tester.com') {
-        navigation.replace('Admin');
-      } else if (user) {
-        navigation.replace('Home');
+
+      if (user) {
+        if (user.email === 'test@tester.com') {
+          navigation.replace('Admin');
+        } else {
+          navigation.replace('Home');
+        }
       }
     });
 

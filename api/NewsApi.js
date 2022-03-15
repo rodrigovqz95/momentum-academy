@@ -1,6 +1,5 @@
 import { firestore } from '../firebase';
 import uuid from 'react-native-uuid';
-import { DarkTheme } from '@react-navigation/native';
 
 export const addNews = async (news, addComplete) => {
   try {
