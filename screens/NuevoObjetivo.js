@@ -9,11 +9,12 @@ import {
   StatusBar,
 } from 'react-native';
 
-import React, { useState } from 'react';
-
-import { auth } from '../firebase';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { auth, firebase } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
 import { createNewObjetivo } from '../api/ObjetivosApi.js';
+import { startAndEndOfWeek } from '../utils/dates_utils.js';
 
 const NuevoObjetivo = () => {
   const [datosObjetivo, setDatosObjetivo] = useState({});
@@ -22,19 +23,23 @@ const NuevoObjetivo = () => {
 
   const userId = auth.currentUser.uid;
 
+  useFocusEffect(
+    useCallback(() => {
+      setDatosObjetivo({});
+    }, [])
+  );
+
   const guardarHandler = () => {
-    const currentDate = new Date();
-    const firstDayWeek = currentDate.getDate() - currentDate.getDay() + 1;
-    const lastDayOfWeek = firstDayWeek + 6;
-    const startOfWeek = new Date(currentDate.setDate(firstDayWeek));
-    const endOfWeek = new Date(currentDate.setDate(lastDayOfWeek));
+    const { start: startOfWeek, end: endOfWeek } = startAndEndOfWeek(
+      new Date()
+    );
 
     const nuevoObjetivo = {
       ...datosObjetivo,
-      createdAt: currentDate.getTime(),
-      startOfWeek: startOfWeek.getTime(),
-      endOfWeek: endOfWeek.getTime(),
-      userId: userId,
+      createdAt: new Date(),
+      startOfWeek: startOfWeek,
+      endOfWeek: endOfWeek,
+      userId,
     };
 
     createNewObjetivo(nuevoObjetivo);

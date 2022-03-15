@@ -41,7 +41,6 @@ const SignUpScreen = () => {
         password
       );
       const user = userCredentials.user;
-      console.log(user.email);
     } catch (error) {
       alert(error.message);
     }
