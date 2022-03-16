@@ -76,8 +76,15 @@ const ListaObjetivos = () => {
 
   return (
     <>
-      {!isLoading && (
+      {!isLoading && objetivos.length > 0 && (
         <ScrollView style={styles.container}>{objetivosItems}</ScrollView>
+      )}
+      {!isLoading && objetivos.length == 0 && (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.emptyMessageText}>
+            No hay objetivos registrados
+          </Text>
+        </View>
       )}
       {isLoading && (
         <View style={styles.loadingContainer}>
@@ -117,5 +124,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  emptyMessageText: {
+    color: '#95969B',
   },
 });

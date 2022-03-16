@@ -39,7 +39,8 @@ const HistorialScreen = () => {
   const [periodoSeleccionado, setPeriodoSeleccionado] =
     useState(PERIODO_DEFAULT);
 
-  const metaActual = objetivosAcumulados[metaSeleccionada];
+  const metaActual =
+    objetivosAcumulados && objetivosAcumulados[metaSeleccionada];
 
   useFocusEffect(
     useCallback(() => {
@@ -114,7 +115,14 @@ const HistorialScreen = () => {
           <ActivityIndicator size="large" color="#95969B" />
         </View>
       )}
-      {!isLoading && (
+      {!isLoading && !objetivosAcumulados && (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.emptyMessageText}>
+            No hay objetivos registrados
+          </Text>
+        </View>
+      )}
+      {!isLoading && objetivosAcumulados && (
         <View style={styles.chartContainer}>
           <Text style={styles.graphTitle}>{GRAPH_LABEL[metaSeleccionada]}</Text>
           <VictoryChart width={250}>
@@ -168,5 +176,8 @@ const styles = StyleSheet.create({
   androidContainer: {
     minHeight: 500,
     marginBottom: -340,
+  },
+  emptyMessageText: {
+    color: '#95969B',
   },
 });
