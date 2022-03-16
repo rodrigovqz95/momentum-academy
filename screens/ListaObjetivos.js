@@ -81,7 +81,7 @@ const ListaObjetivos = () => {
       )}
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color="#95969B" />
         </View>
       )}
     </>

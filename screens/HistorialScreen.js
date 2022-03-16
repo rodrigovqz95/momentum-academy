@@ -1,7 +1,16 @@
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { VictoryBar, VictoryChart, VictoryGroup } from 'victory-native';
-
-import { Divider } from 'react-native-elements';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+  Platform,
+} from 'react-native';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryGroup,
+  VictoryAxis,
+} from 'victory-native';
 
 import React, { useState, useCallback } from 'react';
 
@@ -46,7 +55,7 @@ const HistorialScreen = () => {
   );
 
   const periodoSelectedHandler = async (itemSelected) => {
-    setIsLoading(isLoading);
+    setIsLoading(true);
     const data = await getAcumuladosObjetivos(itemSelected.value);
     setObjetivosAcumulados(data);
     setIsLoading(false);
@@ -60,16 +69,19 @@ const HistorialScreen = () => {
     setOpenPeriodoDropdown(false);
   };
 
-  const esperados = [
-    { x: GRAPH_LABEL[metaSeleccionada], y: metaActual?.esperado || 0 },
-  ];
-  const logrados = [
-    { x: GRAPH_LABEL[metaSeleccionada], y: metaActual?.logrado || 0 },
-  ];
+  const esperados = [{ x: 'Esperado', y: metaActual?.esperado || 0 }];
+  const logrados = [{ x: 'Logrado', y: metaActual?.logrado || 0 }];
 
   return (
     <View style={styles.container}>
-      <View style={styles.dropdownContainer}>
+      <View
+        style={[
+          styles.filtersContainer,
+          Platform.OS === 'android' &&
+            (openMetaDropdown || openPeriodoDropdown) &&
+            styles.androidContainer,
+        ]}
+      >
         <DropDownPicker
           open={openMetaDropdown}
           value={metaSeleccionada}
@@ -99,26 +111,26 @@ const HistorialScreen = () => {
       </View>
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color="#95969B" />
         </View>
       )}
       {!isLoading && (
         <View style={styles.chartContainer}>
-          <VictoryChart>
-            <VictoryGroup offset={30} colorScale={'qualitative'}>
+          <Text style={styles.graphTitle}>{GRAPH_LABEL[metaSeleccionada]}</Text>
+          <VictoryChart width={250}>
+            <VictoryGroup colorScale={'qualitative'}>
               <VictoryBar
-                barWidth={30}
+                barWidth={80}
                 data={esperados}
-                categories={{ x: [GRAPH_LABEL[metaSeleccionada]] }}
                 labels={({ datum }) => `${datum.y}`}
               />
               <VictoryBar
+                barWidth={80}
                 data={logrados}
-                barWidth={30}
-                categories={{ x: [GRAPH_LABEL[metaSeleccionada]] }}
                 labels={({ datum }) => `${datum.y}`}
               />
             </VictoryGroup>
+            <VictoryAxis style={{ axis: { stroke: 'none' } }} />
           </VictoryChart>
         </View>
       )}
@@ -132,10 +144,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  dropdownContainer: {
+  filtersContainer: {
     padding: 20,
     width: '100%',
-    zIndex: 100,
+    zIndex: 999,
   },
   chartContainer: {
     flex: 1,
@@ -146,5 +158,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  graphTitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: 20,
+  },
+  androidContainer: {
+    minHeight: 500,
+    marginBottom: -340,
   },
 });
