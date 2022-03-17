@@ -5,6 +5,7 @@ import {
   Text,
   Platform,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 
 import { ProgressCircle } from 'react-native-svg-charts';
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   chartContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: '10%',
+    paddingTop: Platform.OS === 'android' ? 0 : '10%',
   },
   loadingContainer: {
     flex: 1,
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginRight: 10,
   },
   resultLabel: {
