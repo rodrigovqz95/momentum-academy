@@ -94,6 +94,7 @@ const HistorialScreen = () => {
           zIndexInverse={1000}
           style={{
             marginBottom: 20,
+            ...styles.dropdownStyle,
           }}
           onOpen={onMetaOpenHandler}
         />
@@ -108,6 +109,7 @@ const HistorialScreen = () => {
           zIndexInverse={2000}
           onSelectItem={periodoSelectedHandler}
           onOpen={onPeriodoOpenHandler}
+          style={styles.dropdownStyle}
         />
       </View>
       {isLoading && (
@@ -135,7 +137,7 @@ const HistorialScreen = () => {
                 marginBottom: 40,
               }}
               progress={porcentajeLogrado / 100}
-              backgroundColor={'lightgray'}
+              backgroundColor={'gainsboro'}
               progressColor={'dodgerblue'}
               strokeWidth={15}
             />
@@ -167,6 +169,7 @@ export default HistorialScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   filtersContainer: {
     padding: 20,
@@ -213,5 +216,8 @@ const styles = StyleSheet.create({
   },
   resultLabel: {
     fontSize: 16,
+  },
+  dropdownStyle: {
+    borderColor: 'lightgrey',
   },
 });
