@@ -20,7 +20,6 @@ const LoginScreen = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-<<<<<<< HEAD
 
       if (user) {
         if (user.email === 'test@tester.com') {
@@ -28,12 +27,6 @@ const LoginScreen = () => {
         } else {
           navigation.replace('Home');
         }
-=======
-      if (user.email === 'test@tester.com') {
-        navigation.replace('Admin');
-      } else if (user) {
-        navigation.replace('Home');
->>>>>>> 3edb1d7d2166500acd7d35734bc5071a6b2254f3
       }
     });
 
