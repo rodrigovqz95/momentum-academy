@@ -4,13 +4,10 @@ import {
   ActivityIndicator,
   Text,
   Platform,
+  Dimensions,
 } from 'react-native';
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryGroup,
-  VictoryAxis,
-} from 'victory-native';
+
+import { ProgressCircle } from 'react-native-svg-charts';
 
 import React, { useState, useCallback } from 'react';
 
@@ -70,8 +67,11 @@ const HistorialScreen = () => {
     setOpenPeriodoDropdown(false);
   };
 
-  const esperados = [{ x: 'Esperado', y: metaActual?.esperado || 0 }];
-  const logrados = [{ x: 'Logrado', y: metaActual?.logrado || 0 }];
+  const esperado = metaActual?.esperado || 0;
+  const logrado = metaActual?.logrado || 0;
+  const porcentajeLogrado = parseFloat(
+    ((metaActual?.logrado || 0) / (metaActual?.esperado || 0)) * 100
+  ).toFixed(0);
 
   return (
     <View style={styles.container}>
@@ -123,24 +123,40 @@ const HistorialScreen = () => {
         </View>
       )}
       {!isLoading && objetivosAcumulados && (
-        <View style={styles.chartContainer}>
-          <Text style={styles.graphTitle}>{GRAPH_LABEL[metaSeleccionada]}</Text>
-          <VictoryChart width={250}>
-            <VictoryGroup colorScale={'qualitative'}>
-              <VictoryBar
-                barWidth={80}
-                data={esperados}
-                labels={({ datum }) => `${datum.y}`}
-              />
-              <VictoryBar
-                barWidth={80}
-                data={logrados}
-                labels={({ datum }) => `${datum.y}`}
-              />
-            </VictoryGroup>
-            <VictoryAxis style={{ axis: { stroke: 'none' } }} />
-          </VictoryChart>
-        </View>
+        <>
+          <View style={styles.chartContainer}>
+            <Text style={styles.graphTitle}>
+              {GRAPH_LABEL[metaSeleccionada]}
+            </Text>
+            <ProgressCircle
+              style={{
+                height: 200,
+                width: Dimensions.get('window').width,
+                marginBottom: 40,
+              }}
+              progress={porcentajeLogrado / 100}
+              backgroundColor={'lightgray'}
+              progressColor={'dodgerblue'}
+              strokeWidth={15}
+            />
+            <View style={styles.detailsContainer}>
+              <View style={styles.labelContainer}>
+                <Text style={styles.detailLabel}>Meta:</Text>
+                <Text style={styles.resultLabel}>{esperado}</Text>
+              </View>
+              <View style={styles.labelContainer}>
+                <Text style={styles.detailLabel}>Logrado:</Text>
+                <Text style={styles.resultLabel}>{logrado}</Text>
+              </View>
+              <View style={styles.labelContainer}>
+                <Text style={styles.detailLabel}>% Completado:</Text>
+                <Text
+                  style={styles.resultLabel}
+                >{`${porcentajeLogrado}%`}</Text>
+              </View>
+            </View>
+          </View>
+        </>
       )}
     </View>
   );
@@ -159,8 +175,8 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: '10%',
   },
   loadingContainer: {
     flex: 1,
@@ -172,6 +188,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     padding: 20,
+    marginBottom: 30,
   },
   androidContainer: {
     minHeight: 500,
@@ -179,5 +196,22 @@ const styles = StyleSheet.create({
   },
   emptyMessageText: {
     color: '#95969B',
+  },
+  detailsContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  detailLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginRight: 10,
+  },
+  resultLabel: {
+    fontSize: 16,
   },
 });
