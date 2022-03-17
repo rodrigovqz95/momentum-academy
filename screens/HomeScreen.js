@@ -77,10 +77,11 @@ export default function HomeTabNavigator() {
         name="Reportes"
         component={ListaObjetivos}
         options={{
-          tabBarLabel: 'Reportes',
+          tabBarLabel: 'Mis Objetivos',
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="book" color={color} size={size} />
           ),
+          title: 'Mis Objetivos',
         }}
       />
       <Tab.Screen
