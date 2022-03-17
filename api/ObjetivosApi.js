@@ -207,3 +207,15 @@ export const updateObjetivoById = async (objetivoId, dataObjetivo) => {
   const objetivoRef = firestore.collection('Objetivos').doc(objetivoId);
   objetivoRef.update(dataObjetivo);
 };
+
+export const deleteObjetivo = async (objetivo) => {
+  try {
+    const data = await firestore.collection('Objetivos').doc(objetivo.id);
+
+    data.delete();
+
+    return await getObjetivosByUserId(objetivo.userId);
+  } catch (error) {
+    console.log(error);
+  }
+};
