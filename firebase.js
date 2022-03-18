@@ -12,8 +12,10 @@ const firebaseConfig = {
   storageBucket: 'momentum-academy.appspot.com',
   messagingSenderId: '933630017400',
   appId: '1:933630017400:web:6d0090082e6c23e8ed128d',
+  passwordReset: email => {
+    return firebase.auth().sendPasswordResetEmail(email)
+  },
 };
-
 // Initialize Firebase
 let app;
 if (firebase.apps.length === 0) {

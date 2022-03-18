@@ -1,7 +1,14 @@
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { VictoryBar, VictoryChart, VictoryGroup } from 'victory-native';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+  Platform,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 
-import { Divider } from 'react-native-elements';
+import { ProgressCircle } from 'react-native-svg-charts';
 
 import React, { useState, useCallback } from 'react';
 
@@ -30,7 +37,8 @@ const HistorialScreen = () => {
   const [periodoSeleccionado, setPeriodoSeleccionado] =
     useState(PERIODO_DEFAULT);
 
-  const metaActual = objetivosAcumulados[metaSeleccionada];
+  const metaActual =
+    objetivosAcumulados && objetivosAcumulados[metaSeleccionada];
 
   useFocusEffect(
     useCallback(() => {
@@ -46,7 +54,7 @@ const HistorialScreen = () => {
   );
 
   const periodoSelectedHandler = async (itemSelected) => {
-    setIsLoading(isLoading);
+    setIsLoading(true);
     const data = await getAcumuladosObjetivos(itemSelected.value);
     setObjetivosAcumulados(data);
     setIsLoading(false);
@@ -60,16 +68,22 @@ const HistorialScreen = () => {
     setOpenPeriodoDropdown(false);
   };
 
-  const esperados = [
-    { x: GRAPH_LABEL[metaSeleccionada], y: metaActual?.esperado || 0 },
-  ];
-  const logrados = [
-    { x: GRAPH_LABEL[metaSeleccionada], y: metaActual?.logrado || 0 },
-  ];
+  const esperado = metaActual?.esperado || 0;
+  const logrado = metaActual?.logrado || 0;
+  const porcentajeLogrado = parseFloat(
+    ((metaActual?.logrado || 0) / (metaActual?.esperado || 0)) * 100
+  ).toFixed(0);
 
   return (
     <View style={styles.container}>
-      <View style={styles.dropdownContainer}>
+      <View
+        style={[
+          styles.filtersContainer,
+          Platform.OS === 'android' &&
+            (openMetaDropdown || openPeriodoDropdown) &&
+            styles.androidContainer,
+        ]}
+      >
         <DropDownPicker
           open={openMetaDropdown}
           value={metaSeleccionada}
@@ -81,6 +95,7 @@ const HistorialScreen = () => {
           zIndexInverse={1000}
           style={{
             marginBottom: 20,
+            ...styles.dropdownStyle,
           }}
           onOpen={onMetaOpenHandler}
         />
@@ -95,32 +110,56 @@ const HistorialScreen = () => {
           zIndexInverse={2000}
           onSelectItem={periodoSelectedHandler}
           onOpen={onPeriodoOpenHandler}
+          style={styles.dropdownStyle}
         />
       </View>
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color="#95969B" />
         </View>
       )}
-      {!isLoading && (
-        <View style={styles.chartContainer}>
-          <VictoryChart>
-            <VictoryGroup offset={30} colorScale={'qualitative'}>
-              <VictoryBar
-                barWidth={30}
-                data={esperados}
-                categories={{ x: [GRAPH_LABEL[metaSeleccionada]] }}
-                labels={({ datum }) => `${datum.y}`}
-              />
-              <VictoryBar
-                data={logrados}
-                barWidth={30}
-                categories={{ x: [GRAPH_LABEL[metaSeleccionada]] }}
-                labels={({ datum }) => `${datum.y}`}
-              />
-            </VictoryGroup>
-          </VictoryChart>
+      {!isLoading && !objetivosAcumulados && (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.emptyMessageText}>
+            No hay objetivos registrados
+          </Text>
         </View>
+      )}
+      {!isLoading && objetivosAcumulados && (
+        <>
+          <View style={styles.chartContainer}>
+            <Text style={styles.graphTitle}>
+              {GRAPH_LABEL[metaSeleccionada]}
+            </Text>
+            <ProgressCircle
+              style={{
+                height: 200,
+                width: Dimensions.get('window').width,
+                marginBottom: 40,
+              }}
+              progress={porcentajeLogrado / 100}
+              backgroundColor={'gainsboro'}
+              progressColor={'dodgerblue'}
+              strokeWidth={15}
+            />
+            <View style={styles.detailsContainer}>
+              <View style={styles.labelContainer}>
+                <Text style={styles.detailLabel}>Meta:</Text>
+                <Text style={styles.resultLabel}>{esperado}</Text>
+              </View>
+              <View style={styles.labelContainer}>
+                <Text style={styles.detailLabel}>Logrado:</Text>
+                <Text style={styles.resultLabel}>{logrado}</Text>
+              </View>
+              <View style={styles.labelContainer}>
+                <Text style={styles.detailLabel}>% Completado:</Text>
+                <Text
+                  style={styles.resultLabel}
+                >{`${porcentajeLogrado}%`}</Text>
+              </View>
+            </View>
+          </View>
+        </>
       )}
     </View>
   );
@@ -131,20 +170,55 @@ export default HistorialScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
-  dropdownContainer: {
+  filtersContainer: {
     padding: 20,
     width: '100%',
-    zIndex: 100,
+    zIndex: 999,
   },
   chartContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: Platform.OS === 'android' ? 0 : '10%',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  graphTitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: 20,
+    marginBottom: 30,
+  },
+  androidContainer: {
+    minHeight: 500,
+    marginBottom: -340,
+  },
+  emptyMessageText: {
+    color: '#95969B',
+  },
+  detailsContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  detailLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  resultLabel: {
+    fontSize: 16,
+  },
+  dropdownStyle: {
+    borderColor: 'lightgrey',
   },
 });

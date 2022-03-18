@@ -2,13 +2,13 @@ export const GRAPH_LABEL = {
   cantidadInvitadosEventos: 'Cantidad Invitados Que Lleve A Mis Eventos',
   cantidadInvitadosPersonales:
     'Cantidad de Invitados Personales a Presentaciones de Oportunidad',
-  cantidadPersonasPatrocinadas: 'Cantidad de Personas Que Patrociné',
-  cantidadPosteos: 'Cantidad de posts que realicé en mis redes sociales',
-  cantidadPresentaciones: 'Cantidad de presentaciones que dí',
-  cantidadProductosVender: 'Cantidad de productos que vendí',
+  cantidadPersonasPatrocinadas: 'Cantidad De Personas Que Patrociné',
+  cantidadPosteos: 'Cantidad De Posts Que Realicé En Mis Redes Sociales',
+  cantidadPresentaciones: 'Cantidad De Presentaciones Que Dí',
+  cantidadProductosVender: 'Cantidad De Productos Que Vendí',
   horasLectura: 'Horas de Lectura',
-  personasConocerSemana: 'Cantidad de personas que conocí',
-  personasContactar: 'Cantidad de personas que invité a mis presentaciones',
+  personasConocerSemana: 'Cantidad De Personas Que Conocí',
+  personasContactar: 'Cantidad De Personas Que Invité A Mis Presentaciones',
 };
 
 export const DROPDOWN_ITEMS = [
@@ -17,23 +17,23 @@ export const DROPDOWN_ITEMS = [
     value: 'cantidadInvitadosEventos',
   },
   {
-    label: 'Cantidad de Invitados Personales a Presentaciones de Oportunidad',
+    label: 'Cantidad De Invitados Personales a Presentaciones de Oportunidad',
     value: 'cantidadInvitadosPersonales',
   },
   {
-    label: 'Cantidad de Personas Que Patrociné',
+    label: 'Cantidad De Personas Que Patrociné',
     value: 'cantidadPersonasPatrocinadas',
   },
   {
-    label: 'Cantidad de posts que realicé en mis redes sociales',
+    label: 'Cantidad De Posts Que Realicé En Mis Redes Sociales',
     value: 'cantidadPosteos',
   },
   {
-    label: 'Cantidad de presentaciones que dí',
+    label: 'Cantidad De Presentaciones Que Dí',
     value: 'cantidadPresentaciones',
   },
   {
-    label: 'Cantidad de productos que vendí',
+    label: 'Cantidad De Productos Que Vendí',
     value: 'cantidadProductosVender',
   },
   {
@@ -41,11 +41,11 @@ export const DROPDOWN_ITEMS = [
     value: 'horasLectura',
   },
   {
-    label: 'Cantidad de personas que conocí',
+    label: 'Cantidad De Personas Que Conocí',
     value: 'personasConocerSemana',
   },
   {
-    label: 'Cantidad de personas que invité a mis presentaciones',
+    label: 'Cantidad De Personas Que Invité A Mis Presentaciones',
     value: 'personasContactar',
   },
 ];

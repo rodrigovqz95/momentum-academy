@@ -4,11 +4,12 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { auth, firebase } from '../firebase';
-import { getObjetivosByUserId } from '../api/ObjetivosApi';
+import { getObjetivosByUserId, deleteObjetivo } from '../api/ObjetivosApi';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/core';
 import { Divider } from 'react-native-elements';
@@ -40,6 +41,13 @@ const ListaObjetivos = () => {
     });
   };
 
+  const deleteHandler = async (objetivo) => {
+    setIsLoading(true);
+    const remainingObjetivos = await deleteObjetivo(objetivo);
+    setObjetivos(remainingObjetivos);
+    setIsLoading(false);
+  };
+
   const objetivosItems = objetivos.map((objetivo) => {
     const formatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -52,7 +60,7 @@ const ListaObjetivos = () => {
     ).toLocaleDateString('es-US', formatOptions);
 
     return (
-      <View key={objetivo.id}>
+      <TouchableOpacity key={objetivo.id} onPress={() => editHandler(objetivo)}>
         <View style={styles.itemContainer}>
           <View style={styles.detailsContainer}>
             <Text style={styles.itemTitle}>Objetivo:</Text>
@@ -62,26 +70,33 @@ const ListaObjetivos = () => {
           </View>
           <View style={styles.iconContainer}>
             <AntDesign
-              name="edit"
-              color="#0782F9"
+              name="delete"
+              color="red"
               size={20}
-              onPress={() => editHandler(objetivo)}
+              onPress={() => deleteHandler(objetivo)}
             />
           </View>
         </View>
         <Divider style={{ setStatusBarBackgroundColor: 'black' }} />
-      </View>
+      </TouchableOpacity>
     );
   });
 
   return (
     <>
-      {!isLoading && (
+      {!isLoading && objetivos.length > 0 && (
         <ScrollView style={styles.container}>{objetivosItems}</ScrollView>
+      )}
+      {!isLoading && objetivos.length == 0 && (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.emptyMessageText}>
+            No hay objetivos registrados
+          </Text>
+        </View>
       )}
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color="#95969B" />
         </View>
       )}
     </>
@@ -94,6 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
+    backgroundColor: 'white',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -117,5 +133,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  emptyMessageText: {
+    color: '#95969B',
   },
 });

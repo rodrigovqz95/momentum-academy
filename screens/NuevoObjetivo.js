@@ -7,17 +7,24 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { auth, firebase } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
-import { createNewObjetivo } from '../api/ObjetivosApi.js';
+import {
+  createNewObjetivo,
+  getMostRecentObjetivoByUserId,
+  updateObjetivoById,
+} from '../api/ObjetivosApi.js';
 import { startAndEndOfWeek } from '../utils/dates_utils.js';
 
 const NuevoObjetivo = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [datosObjetivo, setDatosObjetivo] = useState({});
+  const [isUpated, setIsUpdated] = useState(false);
 
   const navigation = useNavigation();
 
@@ -25,11 +32,31 @@ const NuevoObjetivo = () => {
 
   useFocusEffect(
     useCallback(() => {
-      setDatosObjetivo({});
+      const getLatestObjetivo = async () => {
+        setIsLoading(true);
+        const objetivo = await getMostRecentObjetivoByUserId(userId);
+        setIsLoading(false);
+        if (objetivo) {
+          setDatosObjetivo(objetivo);
+          setIsUpdated(true);
+          navigation.setOptions({ title: 'Actualizar Objetivo' });
+        } else {
+          setDatosObjetivo({});
+          setIsUpdated(false);
+        }
+      };
+
+      getLatestObjetivo();
     }, [])
   );
 
   const guardarHandler = () => {
+    if (isUpated) {
+      updateObjetivoById(datosObjetivo.id, datosObjetivo);
+      navigation.navigate('Noticias');
+      return;
+    }
+
     const { start: startOfWeek, end: endOfWeek } = startAndEndOfWeek(
       new Date()
     );
@@ -48,195 +75,204 @@ const NuevoObjetivo = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de Personas que voy a conocer en la semana:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.personasConocerSemana?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              personasConocerSemana: {
-                ...datosObjetivo.personasConocerSemana,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de Personas que voy a contactar para invitar a mis
-          presentaciones:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.personasContactar?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              personasContactar: {
-                ...datosObjetivo.personasContactar,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de presentaciones que voy a dar en la semana:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.cantidadPresentaciones?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              cantidadPresentaciones: {
-                ...datosObjetivo.cantidadPresentaciones,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de invitados personales que estarán en presentaciones de
-          oportunidad:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.cantidadInvitadosPersonales?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              cantidadInvitadosPersonales: {
-                ...datosObjetivo.cantidadInvitadosPersonales,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de invitados que voy a llevar a mis eventos:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.cantidadInvitadosEventos?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              cantidadInvitadosEventos: {
-                ...datosObjetivo.cantidadInvitadosEventos,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Horas que voy a dedicar a la lectura:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.horasLectura?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              horasLectura: {
-                ...datosObjetivo.horasLectura,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de productos que voy a vender:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.cantidadProductosVender?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              cantidadProductosVender: {
-                ...datosObjetivo.cantidadProductosVender,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de personas que voy a patrocinar:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.cantidadPersonasPatrocinadas?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              cantidadPersonasPatrocinadas: {
-                ...datosObjetivo.cantidadPersonasPatrocinadas,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <Text style={styles.inputLabel}>
-          Cantidad de posteos que haré en mis redes sociales:
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresa la cantidad a lograr..."
-          keyboardType="numeric"
-          value={datosObjetivo.cantidadPosteos?.esperado}
-          onChangeText={(text) =>
-            setDatosObjetivo({
-              ...datosObjetivo,
-              cantidadPosteos: {
-                ...datosObjetivo.cantidadPosteos,
-                esperado: text,
-              },
-            })
-          }
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={guardarHandler}>
-          <Text style={styles.buttonText}>Guardar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <>
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#95969B" />
+        </View>
+      )}
+      {!isLoading && (
+        <ScrollView style={styles.container}>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de Personas que voy a conocer en la semana:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.personasConocerSemana?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  personasConocerSemana: {
+                    ...datosObjetivo.personasConocerSemana,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de Personas que voy a contactar para invitar a mis
+              presentaciones:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.personasContactar?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  personasContactar: {
+                    ...datosObjetivo.personasContactar,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de presentaciones que voy a dar en la semana:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.cantidadPresentaciones?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  cantidadPresentaciones: {
+                    ...datosObjetivo.cantidadPresentaciones,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de invitados personales que estarán en presentaciones de
+              oportunidad:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.cantidadInvitadosPersonales?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  cantidadInvitadosPersonales: {
+                    ...datosObjetivo.cantidadInvitadosPersonales,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de invitados que voy a llevar a mis eventos:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.cantidadInvitadosEventos?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  cantidadInvitadosEventos: {
+                    ...datosObjetivo.cantidadInvitadosEventos,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Horas que voy a dedicar a la lectura:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.horasLectura?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  horasLectura: {
+                    ...datosObjetivo.horasLectura,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de productos que voy a vender:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.cantidadProductosVender?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  cantidadProductosVender: {
+                    ...datosObjetivo.cantidadProductosVender,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de personas que voy a patrocinar:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.cantidadPersonasPatrocinadas?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  cantidadPersonasPatrocinadas: {
+                    ...datosObjetivo.cantidadPersonasPatrocinadas,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.inputLabel}>
+              Cantidad de posteos que haré en mis redes sociales:
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingresa la cantidad a lograr..."
+              keyboardType="numeric"
+              value={datosObjetivo.cantidadPosteos?.esperado}
+              onChangeText={(text) =>
+                setDatosObjetivo({
+                  ...datosObjetivo,
+                  cantidadPosteos: {
+                    ...datosObjetivo.cantidadPosteos,
+                    esperado: text,
+                  },
+                })
+              }
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={guardarHandler}>
+              <Text style={styles.buttonText}>Guardar</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
+    </>
   );
 };
 
@@ -282,5 +318,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '700',
     fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });

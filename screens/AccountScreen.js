@@ -25,35 +25,23 @@ export default function AccountScreen(){
         }
       };
 
+    const handleChangePass = async () => {
+        navigation.replace('ChangePass');
+      };
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.statsContainer}>
-                    <View style={styles.profileImage}>
-                        <Image source={require("../assets/rodrigo_YT.png")} style={styles.image} resizeMode="center"></Image>
-                    </View>
                     <View style={styles.container}>
-                        <Text>Email: {auth.currentUser?.email}</Text>
+                        <Text>Correo:</Text>
+                        <Text>{auth.currentUser?.email}</Text>
                         <TouchableOpacity style={styles.button} onPress={handleSignOut}>
                             <Text style={styles.buttonText}>Sign Out</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleChangePass}>
+                            <Text style={styles.buttonText}>Cambiar Contraseña</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-
-                <View style={{ marginTop: 32 }}>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/splash.png")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/splash.png")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/splash.png")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                    </ScrollView>
-                </View>
-            </ScrollView>
         </SafeAreaView>
     );
 }

@@ -1,0 +1,169 @@
+import {
+    StyleSheet,
+    View,
+    Text,
+    KeyboardAvoidingView,
+    TextInput,
+    TouchableOpacity,
+    Platform,
+    Image,
+    SafeAreaView,
+  } from 'react-native';
+import React, { useState, useEffect, Fragment, Component } from 'react';
+import { auth } from '../firebase';
+import { useNavigation } from '@react-navigation/core';
+
+  const ForgotPass = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+  
+    const navigation = useNavigation();
+  
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+  
+        if (user) {
+          if (user.email === 'test@tester.com') {
+            navigation.replace('Admin');
+          } else {
+            navigation.replace('Home');
+          }
+        }
+      });
+  
+      return unsubscribe;
+    }, []);
+  
+    const handleSignUp = async () => {
+      navigation.replace('SignUp');
+    };
+  
+    const loginHandler = async () => {
+      navigation.replace('Login');
+    };
+
+    const  handlePasswordReset = async () => {
+      try {
+        await auth.sendPasswordResetEmail(email)
+        console.log('Password reset email sent successfully')
+        navigation.navigate('Login')
+      } catch (error) {
+        console.log(error)
+      }
+    };
+  
+    return (
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.logoImage}>
+          <Image
+            source={require('../assets/logo-momentum-academy.png')}
+            style={styles.image}
+            resizeMode="contain"
+          ></Image>
+        </View>
+        <View style={styles.inputContainer}>
+        <Text style={styles.mainText}>
+              {'Ingresa Tu Correo Electronico Para Recuperar Tu Contraseña'}
+            </Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Correo"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+            keyboardType="email-address"
+          />
+        </View>
+  
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handlePasswordReset} style={styles.button}>
+            <Text style={styles.buttonText}>Recuperar Contraseña</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handlePasswordReset}
+            style={[styles.button, styles.buttonOutline]}
+          >
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          onPress={loginHandler}
+          style={[styles.button, styles.buttonOutline]}
+        >
+          <Text style={styles.buttonOutlineText}>
+            {`¿Ya Tienes Una Cuenta?\n¡Inicia Sesión Aquí!`}
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    );
+  };
+  
+  export default ForgotPass;
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    inputContainer: {
+      width: '80%',
+    },
+    input: {
+      backgroundColor: 'white',
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      borderRadius: 10,
+      marginTop: 5,
+    },
+    buttonContainer: {
+      width: '60%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 40,
+    },
+    button: {
+      backgroundColor: '#0782F9',
+      width: '100%',
+      padding: 15,
+      borderRadius: 10,
+      alignItems: 'center',
+    },
+    buttonText: {
+      color: 'white',
+      fontWeight: '700',
+      fontSize: 16,
+    },
+    buttonOutline: {
+      backgroundColor: 'transparent',
+      marginTop: 5,
+      borderColor: '#0782F9',
+    },
+    buttonOutlineText: {
+      color: '#0782F9',
+      fontWeight: '700',
+      fontSize: 14,
+      textAlign: 'center',
+    },
+    mainText: {
+      color: '#0782F9',
+      fontWeight: '300',
+      fontSize: 14,
+      textAlign: 'justify',
+      paddingBottom: 10
+    },
+    image: {
+      flex: 1,
+      height: undefined,
+      width: undefined,
+    },
+    logoImage: {
+      width: 250,
+      height: 250,
+      overflow: 'hidden',
+    },
+  });
+  

@@ -10,6 +10,7 @@ import ListaObjetivos from './ListaObjetivos';
 import NuevoObjetivo from './NuevoObjetivo';
 import HistorialScreen from './HistorialScreen';
 import NewsList from './NewsList';
+import NewsListAdmin from './NewsList';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -77,10 +78,11 @@ export default function HomeTabNavigator() {
         name="Reportes"
         component={ListaObjetivos}
         options={{
-          tabBarLabel: 'Reportes',
+          tabBarLabel: 'Mis Objetivos',
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="book" color={color} size={size} />
           ),
+          title: 'Mis Objetivos',
         }}
       />
       <Tab.Screen

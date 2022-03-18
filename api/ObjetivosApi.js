@@ -4,6 +4,7 @@ import {
   get30DaysAgoFromToday,
   get90DaysAgoFromToday,
   getDateFromFirestoreTimestamp,
+  startAndEndOfWeek,
 } from '../utils/dates_utils.js';
 
 export const createNewObjetivo = async (objetivoData) => {
@@ -68,6 +69,10 @@ export const getAcumuladosObjetivos = async (periodo) => {
     objetivo.id = id;
     objetivos.push(objetivo);
   });
+
+  if (objetivos.length == 0) {
+    return null;
+  }
 
   objetivos = JSON.parse(JSON.stringify(objetivos));
 
@@ -143,7 +148,7 @@ export const getObjetivosByUserId = async (id) => {
   const snapshots = await firestore
     .collection('Objetivos')
     .where('userId', '==', id)
-    .orderBy('createdAt')
+    .orderBy('createdAt', 'desc')
     .get();
 
   snapshots.forEach((doc) => {
@@ -154,6 +159,31 @@ export const getObjetivosByUserId = async (id) => {
   });
 
   return JSON.parse(JSON.stringify(objetivosUsuario));
+};
+
+export const getMostRecentObjetivoByUserId = async (id) => {
+  let objetivosUsuario = [];
+
+  const { start, end } = startAndEndOfWeek(new Date());
+
+  const snapshots = await firestore
+    .collection('Objetivos')
+    .where('userId', '==', id)
+    .where('createdAt', '>', start)
+    .where('createdAt', '<', end)
+    .orderBy('createdAt')
+    .get();
+
+  snapshots.forEach((doc) => {
+    const objetivo = doc.data();
+    const id = doc.id;
+    objetivo.id = id;
+    objetivosUsuario.push(objetivo);
+  });
+
+  return objetivosUsuario.length > 0
+    ? JSON.parse(JSON.stringify(objetivosUsuario[0]))
+    : null;
 };
 
 export const getObjetivosByObjetivoId = async (objetivoId) => {
@@ -176,4 +206,16 @@ export const updateObjetivoById = async (objetivoId, dataObjetivo) => {
 
   const objetivoRef = firestore.collection('Objetivos').doc(objetivoId);
   objetivoRef.update(dataObjetivo);
+};
+
+export const deleteObjetivo = async (objetivo) => {
+  try {
+    const data = await firestore.collection('Objetivos').doc(objetivo.id);
+
+    data.delete();
+
+    return await getObjetivosByUserId(objetivo.userId);
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -15,7 +15,7 @@ import { ListItem, Divider } from 'react-native-elements';
 import { addNews, getNews, deleteNews } from '../api/NewsApi';
 import { styles } from '../components/Styles';
 
-class NewsList extends Component {
+class NewsListAdmin extends Component {
   state = {
     newsList: [],
     currentNewsItem: '',
@@ -58,6 +58,11 @@ class NewsList extends Component {
                 <ListItem.Title style={styles.inputLabel}>
                   {item.text}
                 </ListItem.Title>
+                <Button
+                  containerStyle={styles.button}
+                  title="Borrar"
+                  onPress={() => deleteNews(item.id, this.onNewsDeleted)}
+                />
               </ListItem>
             );
           }}
@@ -67,4 +72,4 @@ class NewsList extends Component {
   }
 }
 
-export default NewsList;
+export default NewsListAdmin;

@@ -12,41 +12,37 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
 
-const LoginScreen = () => {
+const ChangePasswordScreen = () => {
   const [email, setEmail] = useState('');
+  const [oldpassword, setOldPassword] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-
-      if (user) {
-        if (user.email === 'test@tester.com') {
-          navigation.replace('Admin');
-        } else {
-          navigation.replace('Home');
-        }
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
   const handleSignUp = async () => {
-    navigation.replace('SignUp');
-  };
+    const userCredentials = await auth.signInWithEmailAndPassword(
+      auth.currentUser?.email,
+      oldpassword
+    );
+    const user = userCredentials.user;
 
-  const handleForgotPassword = async () => {
-    navigation.replace('ForgotPass');
+    if (password !== confirmPassword) {
+      alert(`Password must be the same`);
+      return;
+    }
+
+    try {
+      user.updatePassword(password);
+      alert("Cambio De Contraseña Fue Exitoso")
+      navigation.replace('Account');      
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const loginHandler = async () => {
-    const userCredentials = await auth.signInWithEmailAndPassword(
-      email,
-      password
-    );
-    const user = userCredentials.user;
+    navigation.replace('Home');
   };
 
   return (
@@ -54,61 +50,46 @@ const LoginScreen = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={styles.logoImage}>
-        <Image
-          source={require('../assets/logo-momentum-academy.png')}
-          style={styles.image}
-          resizeMode="contain"
-        ></Image>
-      </View>
-      <View style={styles.inputContainer}>
-      <Text style={styles.mainText}>
-            {'¡Bienvenido A La App De Seguimiento De Momentum Academy!'}
-          </Text>
-      </View>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Correo"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
+          placeholder="Contraseña"
+          value={oldpassword}
+          onChangeText={(text) => setOldPassword(text)}
           style={styles.input}
-          keyboardType="email-address"
+          secureTextEntry
         />
 
         <TextInput
-          placeholder="Contraseña"
+          placeholder="Nueva Contraseña"
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
         />
+        <TextInput
+          placeholder="Confirmar Nueva Contraseña"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          style={styles.input}
+          secureTextEntry
+        />
       </View>
-      <TouchableOpacity
-          onPress={handleForgotPassword}
-          style={[styles.button, styles.buttonOutline]}
-          >
-          <Text style={styles.buttonOutlineTextRight}>
-            {`¿Olvidaste La Contraseña?`}
-          </Text>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handleSignUp} style={styles.button}>
+          <Text style={styles.buttonText}>Cambiar Contraseña</Text>
         </TouchableOpacity>
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={loginHandler} style={styles.button}>
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>
-            {`¿No tienes cuenta?\n¡Registrate aquí!`}
-          </Text>
+          <Text style={styles.buttonText}>Regresar</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-export default LoginScreen;
+export default ChangePasswordScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -152,21 +133,8 @@ const styles = StyleSheet.create({
   buttonOutlineText: {
     color: '#0782F9',
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'center',
-  },
-  buttonOutlineTextRight: {
-    color: '#0782F9',
-    fontWeight: '700',
-    fontSize: 14,
-    textAlign: 'right',
-  },
-  mainText: {
-    color: '#0782F9',
-    fontWeight: '300',
-    fontSize: 14,
-    textAlign: 'justify',
-    paddingBottom: 10
   },
   image: {
     flex: 1,

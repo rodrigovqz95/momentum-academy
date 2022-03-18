@@ -6,8 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/splash-ma-black.png",
+      "resizeMode": "center",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "expo.notifications.tutorial",
+      "package": "expo.notifications",
       "permissions": ["NOTIFICATIONS"],
       "useNextNotificationsApi": true,
       "adaptiveIcon": {

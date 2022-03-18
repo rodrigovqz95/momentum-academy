@@ -5,33 +5,13 @@ import { useNavigation } from "@react-navigation/core";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Profile from './AccountScreen'
-import NewsList from "./NewsList";
+import NewsListAdmin from "./NewsListAdmin";
+import PushNotif from "./PushNotifications";
 import ListaObjetivos from "./ListaObjetivos";
 import NuevoObjetivo from "./NuevoObjetivo";
 import AddNews from "./AddNews";
 import {styles} from "../components/Styles";
 
-const AdminScreen = () => {
-  const navigation = useNavigation();
-
-  const handleSignOut = async () => {
-    try {
-      await auth.signOut();
-      navigation.replace("Login");
-    } catch (error) {
-      alert(error.mesasge);
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-        <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const Tab = createBottomTabNavigator();
 
@@ -54,30 +34,10 @@ export default function App() {
         }
       >
         <Tab.Screen
-          name="Noticias"
-          component={ListaObjetivos}
+          name="Noticias Admin"
+          component={NewsListAdmin}
           options={{
-            tabBarLabel: 'Noticias',
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="home" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Metas"
-          component={NuevoObjetivo}
-          options={{
-            tabBarLabel: 'Metas',
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="staro" color={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Reportes"
-          component={NewsList}
-          options={{
-            tabBarLabel: 'Reportes',
+            tabBarLabel: 'Noticias Admin',
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="book" color={color} size={size} />
             ),
@@ -89,7 +49,7 @@ export default function App() {
           options={{
             tabBarLabel: 'Agregar Noticia',
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="linechart" color={color} size={size} />
+              <AntDesign name="bells" color={color} size={size} />
             ),
           }}
         />
