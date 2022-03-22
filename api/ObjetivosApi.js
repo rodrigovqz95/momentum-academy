@@ -11,7 +11,7 @@ export const createNewObjetivo = async (objetivoData) => {
   await firestore.collection('Objetivos').add(objetivoData);
 };
 
-export const getAcumuladosObjetivos = async (periodo) => {
+export const getAcumuladosObjetivos = async (periodo, userId) => {
   let objetivos = [];
 
   let cantidadInvitadosEventos = {
@@ -61,6 +61,7 @@ export const getAcumuladosObjetivos = async (periodo) => {
   const snapshots = await firestore
     .collection('Objetivos')
     .where('createdAt', '>', limitDate)
+    .where('userId', '==', userId)
     .get();
 
   snapshots.forEach((doc) => {
@@ -142,12 +143,12 @@ export const getAcumuladosObjetivos = async (periodo) => {
   return JSON.parse(JSON.stringify(acumuladoObjetivos));
 };
 
-export const getObjetivosByUserId = async (id) => {
+export const getObjetivosByUserId = async (userId) => {
   let objetivosUsuario = [];
 
   const snapshots = await firestore
     .collection('Objetivos')
-    .where('userId', '==', id)
+    .where('userId', '==', userId)
     .orderBy('createdAt', 'desc')
     .get();
 

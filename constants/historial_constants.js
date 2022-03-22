@@ -11,6 +11,22 @@ export const GRAPH_LABEL = {
   personasContactar: 'Cantidad De Personas Que Invité A Mis Presentaciones',
 };
 
+export const METAS_LABELS = {
+  cantidadInvitadosEventos:
+    'Cantidad de invitados que voy a llevar a mis eventos:',
+  cantidadInvitadosPersonales:
+    'Cantidad de invitados personales que estarán en presentaciones de oportunidad:',
+  cantidadPersonasPatrocinadas: 'Cantidad de personas que voy a patrocinar:',
+  cantidadPosteos: 'Cantidad de posteos que haré en mis redes sociales:',
+  cantidadPresentaciones:
+    'Cantidad de presentaciones que voy a dar en la semana:',
+  cantidadProductosVender: 'Cantidad de productos que voy a vender:',
+  horasLectura: 'Horas que voy a dedicar a la lectura:',
+  personasConocerSemana: 'Cantidad de Personas que voy a conocer en la semana:',
+  personasContactar:
+    'Cantidad de Personas que voy a contactar para invitar a mis presentaciones:',
+};
+
 export const DROPDOWN_ITEMS = [
   {
     label: 'Cantidad Invitados Que Lleve A Mis Eventos',

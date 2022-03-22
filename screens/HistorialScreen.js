@@ -20,7 +20,7 @@ import {
   DROPDOWN_ITEMS,
   PERIODO_DROPDOWN_ITEMS,
 } from '../constants/historial_constants.js';
-
+import { auth } from '../firebase';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const META_DEFAULT = 'personasConocerSemana';
@@ -40,11 +40,13 @@ const HistorialScreen = () => {
   const metaActual =
     objetivosAcumulados && objetivosAcumulados[metaSeleccionada];
 
+  const userId = auth.currentUser.uid;
+
   useFocusEffect(
     useCallback(() => {
       const getObjetivos = async () => {
         setIsLoading(true);
-        const data = await getAcumuladosObjetivos(periodoSeleccionado);
+        const data = await getAcumuladosObjetivos(periodoSeleccionado, userId);
         setObjetivosAcumulados(data);
         setIsLoading(false);
       };
@@ -70,9 +72,11 @@ const HistorialScreen = () => {
 
   const esperado = metaActual?.esperado || 0;
   const logrado = metaActual?.logrado || 0;
-  const porcentajeLogrado = parseFloat(
-    ((metaActual?.logrado || 0) / (metaActual?.esperado || 0)) * 100
-  ).toFixed(0);
+  const porcentajeLogrado = metaActual
+    ? parseFloat(
+        ((metaActual?.logrado || 0) / (metaActual?.esperado || 1)) * 100
+      ).toFixed(0)
+    : 0;
 
   return (
     <View style={styles.container}>
@@ -137,7 +141,7 @@ const HistorialScreen = () => {
                 width: Dimensions.get('window').width,
                 marginBottom: 40,
               }}
-              progress={porcentajeLogrado / 100}
+              progress={(porcentajeLogrado || 0) / 100}
               backgroundColor={'gainsboro'}
               progressColor={'dodgerblue'}
               strokeWidth={15}
@@ -153,9 +157,9 @@ const HistorialScreen = () => {
               </View>
               <View style={styles.labelContainer}>
                 <Text style={styles.detailLabel}>% Completado:</Text>
-                <Text
-                  style={styles.resultLabel}
-                >{`${porcentajeLogrado}%`}</Text>
+                <Text style={styles.resultLabel}>{`${
+                  porcentajeLogrado || 0
+                }%`}</Text>
               </View>
             </View>
           </View>
