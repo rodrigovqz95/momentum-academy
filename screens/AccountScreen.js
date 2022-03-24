@@ -3,14 +3,9 @@ import { StyleSheet,
         Text,
         View,
         SafeAreaView,
-        Image,
-        TextInput,
-        ScrollView,
-        Button,
         TouchableOpacity} from "react-native";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
-import {addNews, getNews} from '../api/NewsApi';
 
 export default function AccountScreen(){
 
@@ -35,7 +30,7 @@ export default function AccountScreen(){
                         <Text>Correo:</Text>
                         <Text>{auth.currentUser?.email}</Text>
                         <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-                            <Text style={styles.buttonText}>Sign Out</Text>
+                            <Text style={styles.buttonText}>Terminar Sesión</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={handleChangePass}>
                             <Text style={styles.buttonText}>Cambiar Contraseña</Text>

@@ -1,48 +1,66 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback, useRef} from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TextInput,
-  Button,
   FlatList,
   SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import { addNews, getNews, deleteNews } from '../api/NewsApi';
+import { getNews } from '../api/NewsApi';
 import { styles } from '../components/Styles';
+import * as Notifications from 'expo-notifications';
+import { registerForPushNotificationsAsync } from '../api/NotificationsAPI'
 
-class NewsList extends Component {
-  state = {
-    newsList: [],
-    currentNewsItem: '',
-    color: 'blue',
-  };
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
-  onNewsDeleted = (news) => {
+const NewsList = () => {
+  const [newsList, setNoticia] = useState([]);
+  const [color, setColor] = useState("blue");
+  const [currentNewsItem, setNewsItem] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  const [expoPushToken, setExpoPushToken] = useState('');
+
+  const onNewsDeleted = (news) => {
     console.log('News Deleted');
     console.log('news');
   };
 
-  onNewsReceived = (newsList) => {
+  const onNewsReceived = (newsList) => {
     console.log(newsList);
-    this.setState((prevState) => ({
-      newsList: (prevState.newsList = newsList),
-    }));
+    setNoticia(newsList);
   };
 
-  componentDidMount() {
-    getNews(this.onNewsReceived);
-  }
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    getNews().then(news => setNoticia(news));
+    console.log(newsList)
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
 
-  render() {
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
     return (
       <SafeAreaView>
         <FlatList
-          data={this.state.newsList}
+          data={newsList}
           ItemSeparatorComponent={() => (
             <Divider style={{ setStatusBarBackgroundColor: 'black' }} />
           )}
@@ -55,7 +73,7 @@ class NewsList extends Component {
                 <ListItem.Title style={styles.inputLabel}>
                   {item.dateDisplay}
                 </ListItem.Title>
-                <ListItem.Title style={styles.inputLabel}>
+                <ListItem.Title style={styles.inputMessage}>
                   {item.text}
                 </ListItem.Title>
               </ListItem>
@@ -64,7 +82,6 @@ class NewsList extends Component {
         />
       </SafeAreaView>
     );
-  }
 }
 
 export default NewsList;

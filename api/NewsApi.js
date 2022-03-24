@@ -48,5 +48,5 @@ export const getNews = async (newsRetrieved) => {
     newsList.push(doc.data());
   });
 
-  newsRetrieved(newsList);
+  return newsList;
 };

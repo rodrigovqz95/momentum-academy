@@ -1,27 +1,36 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
+import { firestore } from '../firebase';
+import uuid from 'react-native-uuid';
 
 // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
 export async function sendPushNotification(mes, expoPushToken) {
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Momentum Academy',
-    body: mes,
-    data: { someData: 'goes here' },
-  };
 
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
+  var snapshot = await firestore
+  .collection('PushNotificationToken')
+  .get();
+
+ snapshot.forEach((doc) => {
+    const message = {
+      to: doc.data().value,
+      sound: 'default',
+      title: 'Momentum Academy',
+      body: mes,
+      data: { someData: 'goes here' },
+    };
+   console.log(doc.data().value)
+
+   fetch('https://exp.host/--/api/v2/push/send', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Accept-encoding': 'gzip, deflate',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(message),
+   });
+});
 }
 
 export async function registerForPushNotificationsAsync() {
@@ -51,6 +60,16 @@ export async function registerForPushNotificationsAsync() {
       lightColor: '#FF231F7C',
     });
   }
-
+  try {
+    const newid = token;
+    const data = await firestore
+      .collection('PushNotificationToken')
+      .doc(newid)
+      .set({
+        value: token
+      });
+  } catch (error) {
+    console.log(error);
+  }
   return token;
 }

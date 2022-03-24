@@ -7,16 +7,13 @@ import {
     TouchableOpacity,
     Platform,
     Image,
-    SafeAreaView,
   } from 'react-native';
-import React, { useState, useEffect, Fragment, Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
 
   const ForgotPass = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-  
     const navigation = useNavigation();
   
     useEffect(() => {

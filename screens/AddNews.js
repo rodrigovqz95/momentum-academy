@@ -1,24 +1,16 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
-    StyleSheet,
     View,
-    Text,
-    Image,
     TextInput,
     Button,
-    FlatList,
     SafeAreaView,
-    ScrollView,
-    TouchableOpacity,
-    Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { ListItem, Divider } from 'react-native-elements';
-import {addNews, deleteNews, getNews} from '../api/NewsApi';
+import {addNews, getNews} from '../api/NewsApi';
 import {styles} from '../components/Styles';
-import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import {sendPushNotification, registerForPushNotificationsAsync} from '../api/NotificationsAPI'
+import { useNavigation } from '@react-navigation/core';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -36,6 +28,8 @@ const AddNews = () => {
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    const navigation = useNavigation();
+
     const state = {
         ...nuevaNoticia,
         newsList: [],
@@ -48,6 +42,7 @@ const AddNews = () => {
     const onNewsAdded = (news) => {
         console.log("News Added");
         console.log("news");
+        navigation.replace("Admin")
     };
 
     useFocusEffect(
@@ -106,10 +101,10 @@ const AddNews = () => {
                 },
                 onNewsAdded()
                 )
-                } 
+                }
             />
             <Button
-                title= 'Push Notification'
+                title= 'Push Notifications'
                 color={color}
                 style={styles.button}
                 onPress={() =>
@@ -117,6 +112,7 @@ const AddNews = () => {
                     setColor(color==="red" ? "green":"red"),
                     setNotification(notification ? false: true)
                     sendPushNotification(nuevaNoticia.currentNewsItem, expoPushToken)
+                    alert("Noticia Ha Sido Enviada Por Push")
                 }
                 } 
             />

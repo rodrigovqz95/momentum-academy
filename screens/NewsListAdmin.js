@@ -1,48 +1,37 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TextInput,
   Button,
   FlatList,
   SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import { addNews, getNews, deleteNews } from '../api/NewsApi';
+import { getNews, deleteNews } from '../api/NewsApi';
 import { styles } from '../components/Styles';
+import { useNavigation } from '@react-navigation/core';
 
-class NewsListAdmin extends Component {
-  state = {
-    newsList: [],
-    currentNewsItem: '',
-    color: 'blue',
-  };
+const  NewsListAdmin = () => {
+  const [newsList, setNoticia] = useState([]);
+  const navigation = useNavigation();
 
-  onNewsDeleted = (news) => {
+  const onNewsDeleted = (news) => {
     console.log('News Deleted');
     console.log('news');
+    navigation.replace("Admin")
   };
 
-  onNewsReceived = (newsList) => {
+  const onNewsReceived = (newsList) => {
     console.log(newsList);
-    this.setState((prevState) => ({
-      newsList: (prevState.newsList = newsList),
-    }));
+    setNoticia(newsList);
   };
 
-  componentDidMount() {
-    getNews(this.onNewsReceived);
-  }
-
-  render() {
+  useEffect(() => {
+    getNews().then(news => setNoticia(news));
+  }, []);
+  
     return (
       <SafeAreaView>
         <FlatList
-          data={this.state.newsList}
+          data={newsList}
           ItemSeparatorComponent={() => (
             <Divider style={{ setStatusBarBackgroundColor: 'black' }} />
           )}
@@ -55,13 +44,13 @@ class NewsListAdmin extends Component {
                 <ListItem.Title style={styles.inputLabel}>
                   {item.dateDisplay}
                 </ListItem.Title>
-                <ListItem.Title style={styles.inputLabel}>
+                <ListItem.Title style={styles.inputMessage}>
                   {item.text}
                 </ListItem.Title>
                 <Button
                   containerStyle={styles.button}
                   title="Borrar"
-                  onPress={() => deleteNews(item.id, this.onNewsDeleted)}
+                  onPress={() => deleteNews(item.id, onNewsDeleted)}
                 />
               </ListItem>
             );
@@ -69,7 +58,6 @@ class NewsListAdmin extends Component {
         />
       </SafeAreaView>
     );
-  }
 }
 
 export default NewsListAdmin;

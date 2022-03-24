@@ -6,14 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
-  Image,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
 
 const ChangePasswordScreen = () => {
-  const [email, setEmail] = useState('');
   const [oldpassword, setOldPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

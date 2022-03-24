@@ -6,9 +6,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { auth, firebase } from '../firebase';
+import { auth } from '../firebase';
 import { getObjetivosByUserId, deleteObjetivo } from '../api/ObjetivosApi';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/core';

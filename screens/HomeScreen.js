@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {registerForPushNotificationsAsync} from '../api/NotificationsAPI'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import Profile from './AccountScreen';
@@ -10,10 +11,20 @@ import ListaObjetivos from './ListaObjetivos';
 import NuevoObjetivo from './NuevoObjetivo';
 import HistorialScreen from './HistorialScreen';
 import NewsList from './NewsList';
-import NewsListAdmin from './NewsList';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -23,6 +34,25 @@ const HomeScreen = () => {
       alert(error.mesasge);
     }
   };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>

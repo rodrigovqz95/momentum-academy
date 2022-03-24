@@ -1,16 +1,9 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
-import { auth } from "../firebase";
-import { useNavigation } from "@react-navigation/core";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Profile from './AccountScreen'
 import NewsListAdmin from "./NewsListAdmin";
-import PushNotif from "./PushNotifications";
-import ListaObjetivos from "./ListaObjetivos";
-import NuevoObjetivo from "./NuevoObjetivo";
 import AddNews from "./AddNews";
-import {styles} from "../components/Styles";
 
 
 const Tab = createBottomTabNavigator();

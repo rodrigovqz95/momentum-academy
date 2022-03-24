@@ -4,8 +4,7 @@ import {
   ActivityIndicator,
   Text,
   Platform,
-  Dimensions,
-  ScrollView,
+  Dimensions
 } from 'react-native';
 
 import { ProgressCircle } from 'react-native-svg-charts';

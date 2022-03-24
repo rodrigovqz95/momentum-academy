@@ -38,6 +38,12 @@ const styles = StyleSheet.create({
       fontWeight: '600',
       fontStyle: 'italic'
     },
+    inputMessage: {
+      fontSize: 14,
+      fontWeight: '600',
+      fontStyle: 'italic',
+      flex: 1
+    },
     recentItem: {
       flexDirection: "row",
       alignItems: "flex-start",
