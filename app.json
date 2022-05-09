@@ -2,11 +2,11 @@
   "expo": {
     "name": "Momentum Academy",
     "slug": "momentum-academy",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon-ma.png",
     "splash": {
-      "image": "./assets/splash-ma-black.png",
+      "image": "./assets/momentum-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,17 +19,25 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.momentumacademy",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.2",
+      "infoPlist": {
+        "NSUserActivityTypes": [
+          "INSendMessageIntent",
+          "INStartCallIntent"
+        ]
+      }
     },
     "android": {
       "package": "com.momentumacademy",
-      "versionCode": 1,
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 2,
       "permissions": [
         "NOTIFICATIONS"
       ],
       "useNextNotificationsApi": true,
+      "icon": "./assets/android-icon.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/android-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },

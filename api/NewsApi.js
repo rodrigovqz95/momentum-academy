@@ -32,8 +32,10 @@ export const deleteNews = async (item, newsDeleted) => {
     data.delete();
 
     newsDeleted(data);
+    alert("¡Noticia ha sido borrada con exito!")
   } catch (error) {
     console.log(error);
+    alert("Hubo un error, noticia no se pudo borrar")
   }
 };
 

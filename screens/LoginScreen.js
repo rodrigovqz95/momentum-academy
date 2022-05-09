@@ -27,6 +27,7 @@ const LoginScreen = () => {
         } else {
           navigation.replace('Home');
         }
+
       }
     });
 
@@ -45,7 +46,20 @@ const LoginScreen = () => {
     const userCredentials = await auth.signInWithEmailAndPassword(
       email,
       password
-    );
+    ).catch(function(error) {
+      errorCode = error.code;
+      errorMessage = error.message;
+      console.log(errorCode)
+      console.log(errorMessage)
+    if (errorCode === "auth/wrong-password") {
+      console.log(errorCode);
+      alert('Contraseña o Usuario Incorrecto!');
+    } if (errorCode === "auth/user-not-found") {
+      console.log(errorCode);
+      alert('Usuario No Encontrado.');
+    } if (errorCode === "auth/too-many-requests") {
+      alert('La Cuenta Ha Sido Bloqueada Por Demasiados Intentos De Accesarla. Para recuperarla favor de cambiar contraseña.');
+    };});
     const user = userCredentials.user;
   };
 

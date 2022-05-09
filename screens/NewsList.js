@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef} from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import {
   FlatList,
   SafeAreaView,
@@ -9,6 +8,7 @@ import { getNews } from '../api/NewsApi';
 import { styles } from '../components/Styles';
 import * as Notifications from 'expo-notifications';
 import { registerForPushNotificationsAsync } from '../api/NotificationsAPI'
+import { auth } from '../firebase';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -26,21 +26,18 @@ const NewsList = () => {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [expoPushToken, setExpoPushToken] = useState('');
-
+  const userId = auth.currentUser.uid;
   const onNewsDeleted = (news) => {
     console.log('News Deleted');
-    console.log('news');
   };
 
   const onNewsReceived = (newsList) => {
-    console.log(newsList);
     setNoticia(newsList);
   };
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync(userId).then(token => setExpoPushToken(token));
     getNews().then(news => setNoticia(news));
-    console.log(newsList)
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);

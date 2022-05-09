@@ -31,10 +31,6 @@ import { useNavigation } from '@react-navigation/core';
       return unsubscribe;
     }, []);
   
-    const handleSignUp = async () => {
-      navigation.replace('SignUp');
-    };
-  
     const loginHandler = async () => {
       navigation.replace('Login');
     };

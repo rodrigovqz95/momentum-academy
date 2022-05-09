@@ -33,7 +33,36 @@ export async function sendPushNotification(mes, expoPushToken) {
 });
 }
 
-export async function registerForPushNotificationsAsync() {
+export async function sendPushNotificationReminder(userId) {
+
+  var snapshot = await firestore
+  .collection('PushNotificationToken')
+  .where('userId', '==', userId)
+  .get();
+
+ snapshot.forEach((doc) => {
+    const message = {
+      to: doc.data().value,
+      sound: 'default',
+      title: 'Momentum Academy',
+      body: "Han Pasado 7 Días Desde Que Creaste Tu Nuevo Objetivo! Es momento de comprobar tus resultados.",
+      data: { someData: 'goes here' },
+    };
+   console.log(doc.data().value)
+
+   fetch('https://exp.host/--/api/v2/push/send', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Accept-encoding': 'gzip, deflate',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(message),
+   });
+});
+}
+
+export async function registerForPushNotificationsAsync(userId) {
   let token;
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -66,10 +95,33 @@ export async function registerForPushNotificationsAsync() {
       .collection('PushNotificationToken')
       .doc(newid)
       .set({
-        value: token
+        value: token,
+        userId: userId
       });
   } catch (error) {
     console.log(error);
   }
   return token;
+}
+
+export async function schedulePushNotification() {
+
+  const id = await Notifications.scheduleNotificationAsync({
+    identifier: 'weekly-reminder',
+    content: {
+      title: "Momentum Academy",
+      body: "Han Pasado 7 Días Desde Que Creaste Tu Nuevo Objetivo! Recuerda comprobar tus resultados.",
+      sound: 'default',
+    },
+    trigger: {
+      seconds: 20,
+    },
+  });
+  console.log("notif id on scheduling", id)
+  console.log(Notifications.getAllScheduledNotificationsAsync())
+  return id;
+}
+
+export async function cancelNotification(notifId){
+  await Notifications.cancelScheduledNotificationAsync(notifId);
 }

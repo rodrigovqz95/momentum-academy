@@ -11,6 +11,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core';
+import { addUser } from '../api/Users';
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState('');
@@ -22,6 +23,10 @@ const SignUpScreen = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        addUser({
+          correo: user.email,
+          userId: user.uid
+        })
         navigation.replace('Home');
       }
     });

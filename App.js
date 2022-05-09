@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-
+import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -11,9 +11,10 @@ import AdminScreen from './screens/AdminScreen';
 import ObjetivosReporte from './screens/ObjetivosReporte';
 import ForgotPass from './screens/ForgotPassScreen';
 import ChangePasswordScreen from './screens/ChangePasswordScreen';
+import AdminHistorialScreen from './screens/AdminHistorialScreen';
 
 const Stack = createNativeStackNavigator();
-
+  
 export default function App() {
   return (
     <NavigationContainer>
@@ -57,6 +58,11 @@ export default function App() {
           name="EditObjetivo"
           component={ObjetivosReporte}
           options={{ title: 'Reportar Resultados' }}
+        />
+        <Stack.Screen
+          name="UserAdminReport"
+          component={AdminHistorialScreen}
+          options={{ title: 'Ver Resultados' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

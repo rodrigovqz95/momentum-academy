@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "933630017400",
+    "firebase_url": "https://momentum-academy-default-rtdb.firebaseio.com",
+    "project_id": "momentum-academy",
+    "storage_bucket": "momentum-academy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933630017400:android:d2aaf1a9e29e3862ed128d",
+        "android_client_info": {
+          "package_name": "com.momentumacademy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933630017400-ih8atvja062etbifl5j52n1j8gh1gs5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWwDyYteaowieXOKDCEBoJLF0rNxHhYrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933630017400-ih8atvja062etbifl5j52n1j8gh1gs5f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

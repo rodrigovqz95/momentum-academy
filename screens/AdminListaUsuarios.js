@@ -6,18 +6,15 @@ import {
   RefreshControl,
 } from 'react-native';
 import { ListItem, Divider } from 'react-native-elements';
-import { getNews, deleteNews } from '../api/NewsApi';
+import { getNews, deleteNews, addNews  } from '../api/NewsApi';
+import { getUsers } from '../api/Users';
 import { styles } from '../components/Styles';
 import { useNavigation } from '@react-navigation/core';
 
-const  NewsListAdmin = () => {
-  const [newsList, setNoticia] = useState([]);
+const  UserListAdmin = () => {
+  const [userList, setUsers] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false)
-  const onNewsDeleted = (news) => {
-    console.log('News Deleted');
-    getNews().then(news => setNoticia(news));
-  };
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -25,17 +22,24 @@ const  NewsListAdmin = () => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(1000).then(() => setRefreshing(false));
-    getNews().then(news => setNoticia(news));
+    getUsers().then(users => setUsers(users));
   }, []);
 
   useEffect(() => {
-    getNews().then(news => setNoticia(news));
+    getUsers().then(users => setUsers(users));
   }, []);
-  
+
+  const editHandler = (item) => {
+    navigation.navigate('UserAdminReport', {
+      userId: item.userId,
+      correo: item.correo
+    });
+  };
+
     return (
       <SafeAreaView>
         <FlatList
-          data={newsList}
+          data={userList}
           ItemSeparatorComponent={() => (
             <Divider style={{ setStatusBarBackgroundColor: 'black' }} />
           )}
@@ -48,17 +52,14 @@ const  NewsListAdmin = () => {
               <ListItem
                 containerStyle={[styles.listContainer, styles.shadowProp]}
               >
-                <ListItem.Title style={styles.inputLabel}>
-                  {item.dateDisplay}
-                </ListItem.Title>
                 <ListItem.Title style={styles.inputMessage}>
-                  {item.text}
+                  {item.correo}
                 </ListItem.Title>
                 <Button
                   containerStyle={styles.button}
-                  title="Borrar"
+                  title=">"
                   onPress={() => 
-                    deleteNews(item.id, onNewsDeleted)
+                    editHandler(item)
                   }
                 />
 
@@ -70,4 +71,4 @@ const  NewsListAdmin = () => {
     );
 }
 
-export default NewsListAdmin;
+export default UserListAdmin;

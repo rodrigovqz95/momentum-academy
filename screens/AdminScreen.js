@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Profile from './AccountScreen'
 import NewsListAdmin from "./NewsListAdmin";
 import AddNews from "./AddNews";
+import UserListAdmin from "./AdminListaUsuarios";
 
 
 const Tab = createBottomTabNavigator();
@@ -47,12 +48,22 @@ export default function App() {
           }}
         />
         <Tab.Screen
+          name="Usuarios"
+          component={UserListAdmin}
+          options={{
+            tabBarLabel: 'Users',
+            tabBarIcon: ({ color, size }) => (
+              <AntDesign name="user" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
           name="Cuenta"
           component={Profile}
           options={{
             tabBarLabel: 'Cuenta',
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="user" color={color} size={size} />
+              <AntDesign name="setting" color={color} size={size} />
             ),
           }}
         />

@@ -25,7 +25,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 const META_DEFAULT = 'personasConocerSemana';
 const PERIODO_DEFAULT = 30;
 
-const HistorialScreen = () => {
+const AdminHistorialScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [objetivosAcumulados, setObjetivosAcumulados] = useState({});
 
@@ -39,13 +39,13 @@ const HistorialScreen = () => {
   const metaActual =
     objetivosAcumulados && objetivosAcumulados[metaSeleccionada];
 
-  const userId = auth.currentUser.uid;
-  console.log(userId)
+  const userId = route.params;
+
   useFocusEffect(
     useCallback(() => {
       const getObjetivos = async () => {
         setIsLoading(true);
-        const data = await getAcumuladosObjetivos(periodoSeleccionado, userId);
+        const data = await getAcumuladosObjetivos(periodoSeleccionado, userId.userId);
         setObjetivosAcumulados(data);
         setIsLoading(false);
       };
@@ -168,7 +168,7 @@ const HistorialScreen = () => {
   );
 };
 
-export default HistorialScreen;
+export default AdminHistorialScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,5 @@
 import { database, firestore } from '../firebase';
+import { sendPushNotificationReminder } from '../api/NotificationsAPI'
 import {
   getOneYearAgoFromToday,
   get30DaysAgoFromToday,
@@ -143,6 +144,31 @@ export const getAcumuladosObjetivos = async (periodo, userId) => {
   return JSON.parse(JSON.stringify(acumuladoObjetivos));
 };
 
+export const checkFinalObjetivo = async (userId) => {
+  let objetivosUsuario = [];
+
+  const snapshots = await firestore
+    .collection('Objetivos')
+    .where('userId', '==', userId)
+    .orderBy('createdAt', 'desc')
+    .get();
+
+  snapshots.forEach((doc) => {
+    const objetivo = doc.data();
+    const id = doc.id;
+    objetivo.id = id;
+    objetivosUsuario.push(objetivo);
+    const date = objetivo.endOfWeek.seconds * 1000;
+    const timestamp = new Date((objetivo.endOfWeek.seconds * 1000));
+    const timestampNow = new Date()
+    if (timestamp.toDateString() == timestampNow.toDateString()){
+      console.log("They Are The Same Date")
+      sendPushNotificationReminder(userId)
+    } else {
+    }
+  });
+};
+
 export const getObjetivosByUserId = async (userId) => {
   let objetivosUsuario = [];
 
@@ -157,6 +183,7 @@ export const getObjetivosByUserId = async (userId) => {
     const id = doc.id;
     objetivo.id = id;
     objetivosUsuario.push(objetivo);
+    const date = objetivo.endOfWeek.seconds * 1000;
   });
 
   return JSON.parse(JSON.stringify(objetivosUsuario));
